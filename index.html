@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMENDROP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+
+    <a href="index.html" class="logo" role="button" tabindex="0" aria-label="Go to Home" onclick="window.location.href='index.html'; return false;">
+        LUMENDROP®
+    </a>
+
+    <main class="page-wrapper">
+        <h1 class="headline">
+            <span id="welcome-message">Welcome, Mortimer Smith!</span>
+            <span class="subtitle">Brighter solutions, every day.</span>
+        </h1>
+        <a href="#" class="btn btn-primary">Get Started</a>
+    </main>
+    
+    <div class="navbar-container">
+        <nav class="floating-navbar">
+            <div class="navbar-links">
+                <a href="index.html">Home</a>
+                <a href="#">Your Topic</a>
+                <a href="#">Test</a>
+            </div>
+            <div class="navbar-user-actions">
+                <a href="#" class="streak-btn">
+                    <img id="streak-icon" src="fire-off.svg" alt="Streak Icon" width="20" height="20">
+                    <span id="streak-count">0</span>
+                </a>
+                <img id="profile-pic" src="https://i.pravatar.cc/40" alt="Profile Photo" class="profile-photo">
+                <a href="login.html" class="btn navbar-btn">Log Out</a>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            gsap.set('.logo', {y: -40, opacity: 0});
+            gsap.set('.headline', {y: 40, opacity: 0});
+            gsap.set('.subtitle', {y: 40, opacity: 0});
+            gsap.set('.btn-primary', {y: 40, opacity: 0});
+            gsap.set('.navbar-container', {y: 40, opacity: 0});
+            gsap.set('.profile-photo', {scale: 0.7, opacity: 0});
+            gsap.set('.streak-btn', {scale: 0.7, opacity: 0});
+
+            gsap.to('.logo', {y: 0, opacity: 1, duration: 0.7, ease: 'power3.out'});
+            gsap.to('.headline', {y: 0, opacity: 1, duration: 0.7, delay: 0.2, ease: 'power3.out'});
+            gsap.to('.subtitle', {y: 0, opacity: 1, duration: 0.7, delay: 0.4, ease: 'power3.out'});
+            gsap.to('.btn-primary', {y: 0, opacity: 1, duration: 0.7, delay: 0.6, ease: 'power3.out'});
+            gsap.to('.navbar-container', {y: 0, opacity: 1, duration: 0.7, delay: 0.8, ease: 'power3.out'});
+            gsap.to('.streak-btn', {scale: 1, opacity: 1, duration: 0.5, delay: 1.0, ease: 'back.out(1.7)'});
+            gsap.to('.profile-photo', {scale: 1, opacity: 1, duration: 0.5, delay: 1.1, ease: 'back.out(1.7)'});
+
+            const mockUserData = {
+                name: "USER",
+                streak: 1,
+                profilePictureUrl: "https://lh3.googleusercontent.com/a/ACg8ocKNwQKkEb788d-7BUL9wHfqDIHSMxdkfhmuSmoYd7yykmrSRx8H=s96-c" // Using a different image for testing
+            };
+            updateProfileWithMockData(mockUserData);
+        });
+
+        function updateProfileWithMockData(userData) {
+            const welcomeElement = document.getElementById('welcome-message');
+            if (welcomeElement && userData.name) {
+                welcomeElement.textContent = `Welcome, ${userData.name}!`;
+            }
+
+            const profileImage = document.getElementById('profile-pic');
+            if (profileImage && userData.profilePictureUrl) {
+                profileImage.src = userData.profilePictureUrl;
+            }
+
+            const streakElement = document.getElementById('streak-count');
+            if (streakElement && typeof userData.streak !== 'undefined') {
+                streakElement.textContent = userData.streak;
+                const streakIcon = document.getElementById('streak-icon');
+                if (streakIcon) {
+                    if (userData.streak > 0) {
+                        streakIcon.src = 'fire-on.svg';
+                    } else {
+                        streakIcon.src = 'fire-off.svg';
+                    }
+                }
+            }
+        }
+
+        function fetchUserProfile() {
+            const apiUrl = '/api/user/profile';
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(userData => {
+                    updateProfileWithMockData(userData);
+                })
+                .catch(error => {
+                    console.error('Error fetching user profile:', error);
+                });
+        }
+    </script>
+</body>
+</html>
