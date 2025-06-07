@@ -7,11 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"> <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body>
 
-    <a href="#home" class="logo">LUMENDROP®</a>
+    <a href="#home" class="logo">LUMENDrop®</a>
 
     <main class="page-wrapper">
         <h1 class="headline"><span id="welcome-message">Welcome, User!</span><span class="subtitle">Brighter solutions, every day.</span></h1>
@@ -23,10 +24,22 @@
             <h2>Choose Your Interests</h2>
             <p>Select one or more topics to get personalized daily 1-minute AI lessons.</p>
             <div class="topic-selection-grid">
-                <div class="topic-tag" data-topic="ai-tech">AI & Tech</div><div class="topic-tag" data-topic="history">History</div><div class="topic-tag" data-topic="science">Science</div><div class="topic-tag" data-topic="mental-health">Mental Health</div><div class="topic-tag" data-topic="productivity">Productivity</div><div class="topic-tag" data-topic="finance">Finance</div><div class="topic-tag" data-topic="design">Design</div><div class="topic-tag" data-topic="philosophy">Philosophy</div><div class="topic-tag" data-topic="space">Space</div><div class="topic-tag" data-topic="marketing">Marketing</div><div class="topic-tag" data-topic="language-learning">Language Learning</div>
+                <div class="topic-tag" data-topic="ai-tech">AI & Tech</div>
+                <div class="topic-tag" data-topic="history">History</div>
+                <div class="topic-tag" data-topic="science">Science</div>
+                <div class="topic-tag" data-topic="mental-health">Mental Health</div>
+                <div class="topic-tag" data-topic="productivity">Productivity</div>
+                <div class="topic-tag" data-topic="finance">Finance</div>
+                <div class="topic-tag" data-topic="design">Design</div>
+                <div class="topic-tag" data-topic="philosophy">Philosophy</div>
+                <div class="topic-tag" data-topic="space">Space</div>
+                <div class="topic-tag" data-topic="marketing">Marketing</div>
+                <div class="topic-tag" data-topic="language-learning">Language Learning</div>
             </div>
             <div class="add-topic-container">
-                <input type="text" id="new-topic-input" placeholder="Or add your own topic..."><button id="add-new-topic-btn" class="btn btn-primary">Add</button><span id="add-topic-feedback" class="feedback-message">Added!</span>
+                <input type="text" id="new-topic-input" placeholder="Or add your own topic...">
+                <button id="add-new-topic-btn" class="btn btn-primary">Add</button>
+                <span id="add-topic-feedback" class="feedback-message">Added!</span>
             </div>
             <button id="save-topics-btn" class="btn btn-primary">Save Topics</button>
         </div>
@@ -34,7 +47,8 @@
             <h2>Confirm Your Schedule</h2>
             <p>Your daily drop will be sent to <strong id="user-email"></strong></p>
             <div class="time-select-container">
-                <label for="time-select">Preferred Delivery Time:</label><select id="time-select" name="delivery-time"></select>
+                <label for="time-select">Preferred Delivery Time:</label>
+                <select id="time-select" name="delivery-time"></select>
             </div>
             <button id="confirm-schedule-btn" class="btn btn-primary">Confirm Schedule</button>
         </div>
@@ -81,7 +95,7 @@
             <p id="no-topics-message" style="display: none;">You haven't selected any topics yet.</p>
         </div>
     </section>
-    
+
     <div class="navbar-container">
         <nav class="floating-navbar">
             <div class="navbar-links">
@@ -91,7 +105,7 @@
             </div>
             <div class="navbar-user-actions">
                 <a href="#" class="streak-btn">
-                    <img id="streak-icon" src="assests/fire-off.svg" alt="Streak Icon" width="20" height="20">
+                    <img id="streak-icon" src="assets/fire-off.svg" alt="Streak Icon" width="20" height="20">
                     <span id="streak-count">0</span>
                 </a>
                 <img id="profile-pic" src="https://i.pravatar.cc/40" alt="Profile Photo" class="profile-photo">
@@ -100,5 +114,6 @@
         </nav>
     </div>
 
-    <script src="script.js"></script> </body>
+    <script src="script.js"></script>
+</body>
 </html>
