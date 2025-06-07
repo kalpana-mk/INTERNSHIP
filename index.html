@@ -7,29 +7,152 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary-green: #16C79A;
+            --support-green: #118C6B;
+            --white: #FFFFFF;
+            --soft-gray: #F2F4F6;
+            --charcoal: #2E2E2E;
+            --light-red: #FEE2E2;
+            --dark-red: #B91C1C;
+            --light-green: #D1FAE5;
+            --dark-green: #065F46;
+        }
+        body { margin: 0; font-family: 'Inter', sans-serif; color: var(--charcoal); display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; background-color: var(--white); background-image: url('blob-green.svg'), url('blob-dark-green.svg'), radial-gradient(var(--charcoal) 0.5px, transparent 0), linear-gradient(180deg, var(--soft-gray) 0%, var(--white) 25%); background-repeat: no-repeat, no-repeat, repeat, no-repeat; background-position: top -20vw left -20vw, bottom -20vw right -20vw, 0 0, 0 0; background-size: 50vw, 45vw, 15px 15px, auto; }
+        .page-wrapper { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; z-index: 2; padding: 20px; }
+        .logo { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); font-weight: 700; letter-spacing: 1px; font-size: 16px; color: var(--charcoal); text-decoration: none; cursor: pointer; z-index: 1001; }
+        .headline { font-size: 5rem; font-weight: 700; line-height: 1.1; margin: 20px 0; color: var(--charcoal); }
+        .headline .subtitle { display: block; color: var(--support-green); font-weight: 500; margin-top: 10px; }
+        .btn { display: inline-block; text-decoration: none; font-weight: 500; border-radius: 9999px; padding: 12px 28px; cursor: pointer; border: none; transition: all 0.2s ease-in-out; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        .btn-primary { background-color: var(--primary-green); color: var(--white); font-size: 16px; }
+        .btn-primary:hover { background-color: var(--support-green); }
+        .navbar-container { position: fixed; bottom: 20px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 1000; }
+        .floating-navbar { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 600px; background-color: var(--soft-gray); padding: 8px 15px; border-radius: 9999px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); border: 1px solid #E5E7EB; }
+        .navbar-links, .navbar-user-actions { display: flex; align-items: center; gap: 15px; }
+        .floating-navbar a { text-decoration: none; color: var(--charcoal); font-size: 15px; font-weight: 500; padding: 8px 12px; transition: color 0.2s ease; white-space: nowrap; }
+        .floating-navbar a:hover { color: var(--primary-green); }
+        .navbar-btn { background-color: var(--primary-green); color: var(--white); font-size: 14px; padding: 10px 20px; }
+        .streak-btn { display: flex; align-items: center; gap: 5px; font-weight: 700; padding: 8px; }
+        #streak-icon { width: 20px; height: 20px; vertical-align: middle; }
+        .profile-photo { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--white); object-fit: cover; cursor: pointer; }
+        
+        .content-section { display: none; padding: 40px 50px; text-align: center; max-width: 900px; margin: 0 auto; background-color: var(--white); border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); transform: translateY(20px); opacity: 0; position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto; height: fit-content; display: flex; flex-direction: column; justify-content: center; z-index: 500; }
+        .content-view { display: none; width: 100%; }
+        .content-section h2 { font-size: 2.5rem; margin-bottom: 15px; }
+
+        .topic-selection-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .topic-tag { background-color: var(--soft-gray); color: var(--charcoal); padding: 12px 25px; border-radius: 9999px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; user-select: none; border: 1px solid transparent; }
+        .topic-tag:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); }
+        .topic-tag.selected { background-color: var(--primary-green); color: var(--white); }
+        .add-topic-container { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; margin-bottom: 40px; height: 48px; }
+        #new-topic-input { font-family: 'Inter', sans-serif; font-size: 16px; padding: 12px 20px; border-radius: 9999px; border: 1px solid #d1d5db; width: 300px; transition: border-color 0.2s ease; }
+        #new-topic-input:focus { outline: none; border-color: var(--primary-green); }
+        #add-new-topic-btn { padding: 12px 25px; }
+        .feedback-message { color: var(--support-green); font-weight: 500; opacity: 0; transition: opacity 0.3s ease; }
+        #save-topics-btn, #confirm-schedule-btn, #submit-btn { padding: 15px 35px; font-size: 18px; }
+        #save-topics-btn:disabled { background-color: var(--support-green); cursor: not-allowed; }
+        
+        #schedule-view p { margin-bottom: 20px; color: #555; }
+        .time-select-container { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 40px; }
+        #time-select { font-family: 'Inter', sans-serif; font-size: 16px; padding: 12px 20px; border-radius: 8px; border: 1px solid #d1d5db; background-color: var(--soft-gray); cursor: pointer; }
+        
+        #test-section .quiz-container p.subtitle { color: #555; margin-bottom: 40px; }
+        .question-card { margin-bottom: 30px; text-align: left; border-bottom: 1px solid var(--soft-gray); padding-bottom: 30px; }
+        .question-card:last-child { border-bottom: none; }
+        .question-text { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; }
+        .options-container { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .option { background-color: var(--soft-gray); padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent; text-align: left; }
+        .option.selected { background-color: var(--primary-green); color: var(--white); }
+        .option.correct { background-color: var(--light-green); color: var(--dark-green); border-color: var(--support-green); font-weight: 700; }
+        .option.incorrect { background-color: var(--light-red); color: var(--dark-red); border-color: #FCA5A5; }
+        .quiz-container.answered .option:not(.selected) { opacity: 0.6; }
+        .quiz-container.answered .option:hover { cursor: not-allowed; }
+        #results-text { font-size: 1.5rem; font-weight: 700; margin-top: 30px; display: none; }
+        
+        #lockout-view { flex-direction: row; align-items: center; justify-content: space-between; gap: 25px; text-align: left; }
+        #lockout-view .icon-clock { width: 50px; height: 50px; color: var(--charcoal); flex-shrink: 0; }
+        .lockout-text-content { flex-grow: 1; }
+        #lockout-view h2 { font-size: 1.8rem; margin: 0 0 5px 0; }
+        #lockout-view p { margin: 0; color: #555; line-height: 1.5; }
+        .countdown-display { text-align: center; color: var(--dark-red); }
+        .countdown-display span { font-size: 1.5rem; font-weight: 700; display: block; }
+        #lockout-back-btn { width: 110px; height: 110px; padding: 0; font-size: 1rem; line-height: 1.2; flex-shrink: 0; display: flex; align-items: center; justify-content: center; text-align: center; }
+
+        @media (max-width: 768px) { 
+            .headline { font-size: 3rem; } .floating-navbar { max-width: 95%; gap: 10px; } .navbar-container { bottom: 10px; } .content-section { padding: 40px 20px; margin: 20px; } .content-section h2 { font-size: 2rem; }
+            #lockout-view { flex-direction: column; text-align: center; gap: 20px; } #lockout-back-btn { width: 100px; height: 100px; }
+            .add-topic-container { flex-direction: column; height: auto; } #new-topic-input { width: 80%; }
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body>
 
-    <a href="index.html" class="logo" role="button" tabindex="0" aria-label="Go to Home" onclick="window.location.href='index.html'; return false;">
-        LUMENDROP®
-    </a>
+    <a href="#home" class="logo">LUMENDROP®</a>
 
     <main class="page-wrapper">
         <h1 class="headline">
-            <span id="welcome-message">Welcome, Mortimer Smith!</span>
+            <span id="welcome-message">Welcome, User!</span>
             <span class="subtitle">Brighter solutions, every day.</span>
         </h1>
         <a href="#" class="btn btn-primary">Get Started</a>
     </main>
+
+    <section id="your-topic-section" class="content-section">
+        <div id="topic-view" class="content-view">
+            <h2>Choose Your Interests</h2>
+            <p>Select one or more topics to get personalized daily 1-minute AI lessons.</p>
+            <div class="topic-selection-grid">
+                 <div class="topic-tag" data-topic="ai-tech">AI & Tech</div><div class="topic-tag" data-topic="history">History</div><div class="topic-tag" data-topic="science">Science</div><div class="topic-tag" data-topic="mental-health">Mental Health</div><div class="topic-tag" data-topic="productivity">Productivity</div><div class="topic-tag" data-topic="finance">Finance</div><div class="topic-tag" data-topic="design">Design</div><div class="topic-tag" data-topic="philosophy">Philosophy</div><div class="topic-tag" data-topic="space">Space</div><div class="topic-tag" data-topic="marketing">Marketing</div><div class="topic-tag" data-topic="language-learning">Language Learning</div>
+            </div>
+            <div class="add-topic-container">
+                <input type="text" id="new-topic-input" placeholder="Or add your own topic...">
+                <button id="add-new-topic-btn" class="btn btn-primary">Add</button>
+                <span id="add-topic-feedback" class="feedback-message">Added!</span>
+            </div>
+            <button id="save-topics-btn" class="btn btn-primary">Save Topics</button>
+        </div>
+        <div id="schedule-view" class="content-view">
+            <h2>Confirm Your Schedule</h2>
+            <p>Your daily drop will be sent to <strong id="user-email"></strong></p>
+            <div class="time-select-container">
+                <label for="time-select">Preferred Delivery Time:</label>
+                <select id="time-select" name="delivery-time"></select>
+            </div>
+            <button id="confirm-schedule-btn" class="btn btn-primary">Confirm Schedule</button>
+        </div>
+    </section>
+
+    <section id="test-section" class="content-section">
+        <div class="quiz-container content-view">
+            <h1>Daily Quiz</h1>
+            <p class="subtitle">Test your knowledge from today's lesson.</p>
+            <div id="questions-container"></div>
+            <button id="submit-btn" class="btn btn-primary">Submit Answer</button>
+            <p id="results-text"></p>
+        </div>
+        <div id="lockout-view" class="content-view">
+            <svg class="icon-clock" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div class="lockout-text-content">
+                <h2>Not Quite! Take some time to review.</h2>
+                <p>To build a strong learning habit, you can try again after the timer runs out. Use this time to review today's lesson in your email.</p>
+            </div>
+            <div class="countdown-display">
+                Try again in:
+                <span id="countdown-timer">01:00:00</span>
+            </div>
+            <button id="lockout-back-btn" class="btn btn-primary">Back to Home</button>
+        </div>
+    </section>
     
     <div class="navbar-container">
         <nav class="floating-navbar">
             <div class="navbar-links">
-                <a href="index.html">Home</a>
-                <a href="#">Your Topic</a>
-                <a href="#">Test</a>
+                <a href="#home">Home</a>
+                <a href="#your-topic">Your Topic</a>
+                <a href="#test">Test</a>
             </div>
             <div class="navbar-user-actions">
                 <a href="#" class="streak-btn">
@@ -43,71 +166,253 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            gsap.set('.logo', {y: -40, opacity: 0});
-            gsap.set('.headline', {y: 40, opacity: 0});
-            gsap.set('.subtitle', {y: 40, opacity: 0});
-            gsap.set('.btn-primary', {y: 40, opacity: 0});
-            gsap.set('.navbar-container', {y: 40, opacity: 0});
-            gsap.set('.profile-photo', {scale: 0.7, opacity: 0});
-            gsap.set('.streak-btn', {scale: 0.7, opacity: 0});
+        let selectedTopics = new Set();
+        let countdownInterval;
+        const mockUserData = {
+            name: "Dinsee", email: "dinsee@example.com", streak: 5,
+            profilePictureUrl: "https://i.pravatar.cc/40?img=3", savedTopics: [] 
+        };
+        const mockQuizData = [ { question: "What does 'GPT' stand for in models like GPT-3?", options: ["General Purpose Technology", "Generative Pre-trained Transformer", "Global Positioning Transmitter", "Graphical Processing Toolbox"], correctAnswer: "Generative Pre-trained Transformer" } ];
 
-            gsap.to('.logo', {y: 0, opacity: 1, duration: 0.7, ease: 'power3.out'});
-            gsap.to('.headline', {y: 0, opacity: 1, duration: 0.7, delay: 0.2, ease: 'power3.out'});
-            gsap.to('.subtitle', {y: 0, opacity: 1, duration: 0.7, delay: 0.4, ease: 'power3.out'});
-            gsap.to('.btn-primary', {y: 0, opacity: 1, duration: 0.7, delay: 0.6, ease: 'power3.out'});
-            gsap.to('.navbar-container', {y: 0, opacity: 1, duration: 0.7, delay: 0.8, ease: 'power3.out'});
-            gsap.to('.streak-btn', {scale: 1, opacity: 1, duration: 0.5, delay: 1.0, ease: 'back.out(1.7)'});
-            gsap.to('.profile-photo', {scale: 1, opacity: 1, duration: 0.5, delay: 1.1, ease: 'back.out(1.7)'});
-
-            const mockUserData = {
-                name: "USER",
-                streak: 1,
-                profilePictureUrl: "https://lh3.googleusercontent.com/a/ACg8ocKNwQKkEb788d-7BUL9wHfqDIHSMxdkfhmuSmoYd7yykmrSRx8H=s96-c" // Using a different image for testing
-            };
-            updateProfileWithMockData(mockUserData);
-        });
-
-        function updateProfileWithMockData(userData) {
-            const welcomeElement = document.getElementById('welcome-message');
-            if (welcomeElement && userData.name) {
-                welcomeElement.textContent = `Welcome, ${userData.name}!`;
-            }
-
-            const profileImage = document.getElementById('profile-pic');
-            if (profileImage && userData.profilePictureUrl) {
-                profileImage.src = userData.profilePictureUrl;
-            }
-
-            const streakElement = document.getElementById('streak-count');
-            if (streakElement && typeof userData.streak !== 'undefined') {
-                streakElement.textContent = userData.streak;
-                const streakIcon = document.getElementById('streak-icon');
-                if (streakIcon) {
-                    if (userData.streak > 0) {
-                        streakIcon.src = 'fire-on.svg';
-                    } else {
-                        streakIcon.src = 'fire-off.svg';
-                    }
-                }
+        function updateProfileUI(userData) {
+            document.getElementById('welcome-message').textContent = `Welcome, ${userData.name}!`;
+            document.getElementById('profile-pic').src = userData.profilePictureUrl;
+            document.getElementById('streak-count').textContent = userData.streak;
+            document.getElementById('streak-icon').src = userData.streak > 0 ? 'fire-on.svg' : 'fire-off.svg';
+        }
+        
+        function initializeTopicSelection(savedTopics) {
+            const topicTags = document.querySelectorAll('.topic-tag:not(.topic-tag-add)');
+            selectedTopics = new Set(savedTopics);
+            topicTags.forEach(tag => {
+                tag.classList.toggle('selected', selectedTopics.has(tag.dataset.topic));
+            });
+        }
+        
+        function populateTimeSelect() {
+            const timeSelect = document.getElementById('time-select');
+            if (!timeSelect) return;
+            timeSelect.innerHTML = ''; 
+            for (let i = 0; i < 24; i++) {
+                let hour = i % 12;
+                hour = hour ? hour : 12;
+                const ampm = i >= 12 ? 'PM' : 'AM';
+                const option = new Option(`${hour}:00 ${ampm}`, `${i.toString().padStart(2, '0')}:00`);
+                timeSelect.appendChild(option);
             }
         }
-
-        function fetchUserProfile() {
-            const apiUrl = '/api/user/profile';
-            fetch(apiUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
-                .then(userData => {
-                    updateProfileWithMockData(userData);
-                })
-                .catch(error => {
-                    console.error('Error fetching user profile:', error);
+        
+        function loadQuiz() {
+            const questionsContainer = document.getElementById('questions-container');
+            const userAnswers = {};
+            if(!questionsContainer) return userAnswers;
+            questionsContainer.innerHTML = '';
+            mockQuizData.forEach((q, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.dataset.questionIndex = index;
+                questionCard.innerHTML = `<p class="question-text">${index + 1}. ${q.question}</p><div class="options-container"></div>`;
+                const optionsContainer = questionCard.querySelector('.options-container');
+                q.options.forEach(opt => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    optionDiv.textContent = opt;
+                    optionDiv.addEventListener('click', () => {
+                        if (document.querySelector('.quiz-container').classList.contains('answered')) return;
+                        userAnswers[index] = opt;
+                        questionCard.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                        optionDiv.classList.add('selected');
+                    });
+                    optionsContainer.appendChild(optionDiv);
                 });
+                questionsContainer.appendChild(questionCard);
+            });
+            return userAnswers;
         }
+
+        function showLockoutScreen(lockoutEndTime) {
+            const quizContainer = document.querySelector('#test-section .quiz-container');
+            const lockoutView = document.getElementById('lockout-view');
+            const countdownTimer = document.getElementById('countdown-timer');
+            gsap.to(quizContainer, {opacity: 0, duration: 0.3, onComplete: () => {
+                quizContainer.style.display = 'none';
+                lockoutView.style.display = 'flex';
+                gsap.fromTo(lockoutView, {opacity: 0, y: 10}, {opacity: 1, y: 0, duration: 0.3});
+            }});
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = lockoutEndTime - now;
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    countdownTimer.parentElement.innerHTML = "You can try again now!";
+                    return;
+                }
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                countdownTimer.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function runPageLoadAnimations() {
+            gsap.set(['.logo', '.headline', '.subtitle', '.btn-primary', '.navbar-container'], { y: 20, opacity: 0 });
+            gsap.set(['.profile-photo', '.streak-btn'], { scale: 0.7, opacity: 0 });
+            gsap.to('.logo', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.2 });
+            gsap.to(['.headline', '.subtitle', '.btn-primary'], { y: 0, opacity: 1, duration: 0.7, stagger: 0.2, ease: 'power3.out', delay: 0.4 });
+            gsap.to('.navbar-container', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.8 });
+            gsap.to(['.streak-btn', '.profile-photo'], { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)', delay: 1.2 });
+        }
+
+        function setupEventListeners(userData, userAnswers) {
+            const mainPageWrapper = document.querySelector('.page-wrapper');
+            const contentSections = document.querySelectorAll('.content-section');
+            const yourTopicLink = document.querySelector('a[href="#your-topic"]');
+            const testLink = document.querySelector('a[href="#test"]');
+            const logoLink = document.querySelector('a.logo');
+            const navbarHomeLinks = document.querySelectorAll('.floating-navbar a[href="#home"]');
+            const topicView = document.getElementById('topic-view');
+            const scheduleView = document.getElementById('schedule-view');
+            const saveTopicsBtn = document.getElementById('save-topics-btn');
+            const confirmScheduleBtn = document.getElementById('confirm-schedule-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const lockoutBackBtn = document.getElementById('lockout-back-btn');
+            const quizContainer = document.querySelector('#test-section .quiz-container');
+            const lockoutView = document.getElementById('lockout-view');
+
+            function showSection(sectionId) {
+                gsap.to(mainPageWrapper, { opacity: 0, duration: 0.4, onComplete: () => mainPageWrapper.style.display = 'none' });
+                contentSections.forEach(section => {
+                    if (section.id === sectionId) {
+                        section.style.display = 'flex';
+                        if (section.id === 'your-topic-section') {
+                            topicView.style.display = 'block';
+                            scheduleView.style.display = 'none';
+                        } else if (section.id === 'test-section') {
+                            quizContainer.style.display = 'block';
+                            lockoutView.style.display = 'none';
+                        }
+                        gsap.fromTo(section, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, delay: 0.1 });
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            }
+            function showMainPage() {
+                gsap.to(contentSections, { opacity: 0, duration: 0.4, onComplete: () => contentSections.forEach(s => s.style.display = 'none') });
+                mainPageWrapper.style.display = 'flex';
+                gsap.to(mainPageWrapper, { opacity: 1, duration: 0.4, delay: 0.1 });
+            }
+
+            // Fix: Add event listeners for both logo and navbar Home links
+            if (logoLink) {
+                logoLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMainPage();
+                });
+            }
+            navbarHomeLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMainPage();
+                });
+            });
+            yourTopicLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSection('your-topic-section');
+            });
+            testLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSection('test-section');
+            });
+            lockoutBackBtn.addEventListener('click', () => showMainPage());
+
+            // Fix: Also handle Get Started button to show topic section
+            const getStartedBtn = document.querySelector('.page-wrapper .btn-primary');
+            if (getStartedBtn) {
+                getStartedBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showSection('your-topic-section');
+                });
+            }
+
+            // Fix: Always show topicView and hide scheduleView when opening topic section
+            function showSection(sectionId) {
+                gsap.to(mainPageWrapper, { opacity: 0, duration: 0.4, onComplete: () => mainPageWrapper.style.display = 'none' });
+                contentSections.forEach(section => {
+                    if (section.id === sectionId) {
+                        section.style.display = 'flex';
+                        if (section.id === 'your-topic-section') {
+                            topicView.style.display = 'block';
+                            scheduleView.style.display = 'none';
+                        } else if (section.id === 'test-section') {
+                            quizContainer.style.display = 'block';
+                            lockoutView.style.display = 'none';
+                        }
+                        gsap.fromTo(section, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, delay: 0.1 });
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            }
+
+            document.querySelectorAll('.topic-tag:not(.topic-tag-add)').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    selectedTopics.has(this.dataset.topic) ? selectedTopics.delete(this.dataset.topic) : selectedTopics.add(this.dataset.topic);
+                });
+            });
+
+            document.getElementById('add-new-topic-btn').addEventListener('click', () => {
+                const newTopicInput = document.getElementById('new-topic-input');
+                const feedbackMessage = document.getElementById('add-topic-feedback');
+                const newTopic = newTopicInput.value.trim();
+                if (newTopic) {
+                    selectedTopics.add(newTopic);
+                    newTopicInput.value = '';
+                    feedbackMessage.style.opacity = '1';
+                    setTimeout(() => { feedbackMessage.style.opacity = '0'; }, 2000);
+                }
+            });
+
+            saveTopicsBtn.addEventListener('click', () => {
+                document.getElementById('user-email').textContent = userData.email;
+                gsap.to(topicView, { opacity: 0, duration: 0.3, onComplete: () => {
+                    topicView.style.display = 'none';
+                    scheduleView.style.display = 'block';
+                    gsap.fromTo(scheduleView, {opacity: 0, y: 10}, {opacity: 1, y: 0, duration: 0.3});
+                }});
+            });
+
+            confirmScheduleBtn.addEventListener('click', () => {
+                const finalData = { topics: Array.from(selectedTopics), time: document.getElementById('time-select').value };
+                alert(`Settings Confirmed!\nData: ${JSON.stringify(finalData, null, 2)}`);
+                showMainPage();
+            });
+
+            submitBtn.addEventListener('click', function() {
+                const selectedAnswer = userAnswers[0];
+                if (!selectedAnswer) { alert('Please select an answer.'); return; }
+                if (selectedAnswer === mockQuizData[0].correctAnswer) {
+                    alert('Correct! Your streak increases!');
+                    mockUserData.streak++;
+                    updateProfileUI(mockUserData);
+                    showMainPage();
+                } else {
+                    const lockoutEndTime = new Date().getTime() + 3600 * 1000;
+                    showLockoutScreen(lockoutEndTime);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProfileUI(mockUserData);
+            initializeTopicSelection(mockUserData.savedTopics);
+            populateTimeSelect();
+            const userAnswers = loadQuiz();
+            setupEventListeners(mockUserData, userAnswers);
+            runPageLoadAnimations();
+        });
     </script>
 </body>
 </html>
