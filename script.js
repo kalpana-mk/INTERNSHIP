@@ -15,7 +15,7 @@ function updateProfileUI(userData) {
     document.getElementById('welcome-message').textContent = `Welcome, ${userData.name}!`;
     document.getElementById('profile-pic').src = userData.profilePictureUrl;
     document.getElementById('streak-count').textContent = userData.streak;
-    document.getElementById('streak-icon').src = userData.streak > 0 ? 'fire-on.svg' : 'fire-off.svg';
+    document.getElementById('streak-icon').src = userData.streak > 0 ? 'assests/fire-on.svg' : 'assests/fire-off.svg';
 
     // Update profile section details
     document.getElementById('profile-pic-large').src = userData.profilePictureUrl.replace('40', '80'); // Larger pic for profile
