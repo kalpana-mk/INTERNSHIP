@@ -13,12 +13,15 @@ const mockQuizData = [ { question: "What does 'GPT' stand for in models like GPT
 
 function updateProfileUI(userData) {
     document.getElementById('welcome-message').textContent = `Welcome, ${userData.name}!`;
+    // Update path for profile picture in navbar
     document.getElementById('profile-pic').src = userData.profilePictureUrl;
     document.getElementById('streak-count').textContent = userData.streak;
-    document.getElementById('streak-icon').src = userData.streak > 0 ? 'assests/fire-on.svg' : 'assests/fire-off.svg';
+    // Update path for streak icon
+    document.getElementById('streak-icon').src = userData.streak > 0 ? 'assets/fire-on.svg' : 'assets/fire-off.svg';
 
     // Update profile section details
-    document.getElementById('profile-pic-large').src = userData.profilePictureUrl.replace('40', '80'); // Larger pic for profile
+    // Updated path for larger profile picture
+    document.getElementById('profile-pic-large').src = userData.profilePictureUrl.replace('40', '80');
     document.getElementById('profile-username').textContent = `Hey, ${userData.name}!`;
     document.getElementById('profile-email-display').textContent = userData.email;
     renderUserTopics(userData.savedTopics);
@@ -26,7 +29,6 @@ function updateProfileUI(userData) {
 
 function initializeTopicSelection(savedTopics) {
     const topicTags = document.querySelectorAll('.topic-tag:not(.topic-tag-add)');
-    // Convert savedTopics array of objects to a Set of topic names for selection logic
     selectedTopics = new Set(savedTopics.map(topic => topic.name));
     topicTags.forEach(tag => {
         tag.classList.toggle('selected', selectedTopics.has(tag.dataset.topic));
@@ -107,29 +109,32 @@ function runPageLoadAnimations() {
     gsap.to(['.headline', '.subtitle', '#get-started-btn'], { y: 0, opacity: 1, duration: 0.7, stagger: 0.2, ease: 'power3.out', delay: 0.4 });
     gsap.to('.navbar-container', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.8 });
     gsap.to(['.streak-btn', '.profile-photo'], { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)', delay: 1.2 });
+
+    // Breathing effect for blobs (background images)
     gsap.to('body', {
-                '--blob-green-size': '52vw',
-                '--blob-dark-green-size': '47vw',
-                '--blob-green-pos': 'top -22vw left -22vw',
-                '--blob-dark-green-pos': 'bottom -22vw right -22vw',
-                duration: 2.5,
-                repeat: -1,
-                yoyo: true,
-                ease: 'sine.inOut',
-                onUpdate: function() {
-                    // Animate background-size and background-position using CSS variables
-                    document.body.style.backgroundSize = `${getComputedStyle(document.body).getPropertyValue('--blob-green-size')}, ${getComputedStyle(document.body).getPropertyValue('--blob-dark-green-size')}, 15px 15px, auto`;
-                    document.body.style.backgroundPosition = `${getComputedStyle(document.body).getPropertyValue('--blob-green-pos')}, ${getComputedStyle(document.body).getPropertyValue('--blob-dark-green-pos')}, 0 0, 0 0`;
-                }
-            });
-            // Set initial CSS variables for blobs
-            document.body.style.setProperty('--blob-green-size', '50vw');
-            document.body.style.setProperty('--blob-dark-green-size', '45vw');
-            document.body.style.setProperty('--blob-green-pos', 'top -20vw left -20vw');
-            document.body.style.setProperty('--blob-dark-green-pos', 'bottom -20vw right -20vw');
-            document.body.style.backgroundSize = '50vw, 45vw, 15px 15px, auto';
-            document.body.style.backgroundPosition = 'top -20vw left -20vw, bottom -20vw right -20vw, 0 0, 0 0';
+        '--blob-green-size': '52vw',
+        '--blob-dark-green-size': '47vw',
+        '--blob-green-pos': 'top -22vw left -22vw',
+        '--blob-dark-green-pos': 'bottom -22vw right -22vw',
+        duration: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        onUpdate: function() {
+            // Animate background-size and background-position using CSS variables
+            document.body.style.backgroundSize = `${getComputedStyle(document.body).getPropertyValue('--blob-green-size')}, ${getComputedStyle(document.body).getPropertyValue('--blob-dark-green-size')}, 15px 15px, auto`;
+            document.body.style.backgroundPosition = `${getComputedStyle(document.body).getPropertyValue('--blob-green-pos')}, ${getComputedStyle(document.body).getPropertyValue('--blob-dark-green-pos')}, 0 0, 0 0`;
+        }
+    });
+    // Set initial CSS variables for blobs
+    document.body.style.setProperty('--blob-green-size', '50vw');
+    document.body.style.setProperty('--blob-dark-green-size', '45vw');
+    document.body.style.setProperty('--blob-green-pos', 'top -20vw left -20vw');
+    document.body.style.setProperty('--blob-dark-green-pos', 'bottom -20vw right -20vw');
+    document.body.style.backgroundSize = '50vw, 45vw, 15px 15px, auto';
+    document.body.style.backgroundPosition = 'top -20vw left -20vw, bottom -20vw right -20vw, 0 0, 0 0';
 }
+
 
 // Function to render user's selected topics
 function renderUserTopics(topics) {
