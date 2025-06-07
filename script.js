@@ -107,6 +107,28 @@ function runPageLoadAnimations() {
     gsap.to(['.headline', '.subtitle', '#get-started-btn'], { y: 0, opacity: 1, duration: 0.7, stagger: 0.2, ease: 'power3.out', delay: 0.4 });
     gsap.to('.navbar-container', { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.8 });
     gsap.to(['.streak-btn', '.profile-photo'], { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)', delay: 1.2 });
+    gsap.to('body', {
+                '--blob-green-size': '52vw',
+                '--blob-dark-green-size': '47vw',
+                '--blob-green-pos': 'top -22vw left -22vw',
+                '--blob-dark-green-pos': 'bottom -22vw right -22vw',
+                duration: 2.5,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut',
+                onUpdate: function() {
+                    // Animate background-size and background-position using CSS variables
+                    document.body.style.backgroundSize = `${getComputedStyle(document.body).getPropertyValue('--blob-green-size')}, ${getComputedStyle(document.body).getPropertyValue('--blob-dark-green-size')}, 15px 15px, auto`;
+                    document.body.style.backgroundPosition = `${getComputedStyle(document.body).getPropertyValue('--blob-green-pos')}, ${getComputedStyle(document.body).getPropertyValue('--blob-dark-green-pos')}, 0 0, 0 0`;
+                }
+            });
+            // Set initial CSS variables for blobs
+            document.body.style.setProperty('--blob-green-size', '50vw');
+            document.body.style.setProperty('--blob-dark-green-size', '45vw');
+            document.body.style.setProperty('--blob-green-pos', 'top -20vw left -20vw');
+            document.body.style.setProperty('--blob-dark-green-pos', 'bottom -20vw right -20vw');
+            document.body.style.backgroundSize = '50vw, 45vw, 15px 15px, auto';
+            document.body.style.backgroundPosition = 'top -20vw left -20vw, bottom -20vw right -20vw, 0 0, 0 0';
 }
 
 // Function to render user's selected topics
